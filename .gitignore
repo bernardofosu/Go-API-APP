@@ -1,0 +1,38 @@
+# Go binary files
+/bin/
+/obj/
+
+# Go dependencies (will be downloaded automatically)
+vendor/
+
+# .env file containing sensitive information
+.env
+
+# IDE/editor specific files
+.idea/
+.vscode/
+
+# OS-specific files
+.DS_Store  # macOS
+Thumbs.db  # Windows
+
+# Go test coverage reports
+*.out
+*.coverprofile
+
+# Go build output
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go workspace
+go.work
+
+# Logs
+*.log
+
+# Temporary files (e.g., from builds)
+*.tmp
+*.swp
