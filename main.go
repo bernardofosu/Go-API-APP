@@ -1,42 +1,3 @@
-// package main
-
-// import (
-// 	"log"
-// 	"my-go-gin-app/config"
-// 	"my-go-gin-app/routes"
-
-// 	"github.com/gin-gonic/gin"
-// )
-
-// func main() {
-// 	config.LoadEnv()
-// 	router := gin.Default()
-
-// 	routes.RegisterRoutes(router)
-
-// 	port := config.AppConfig.Port
-// 	log.Printf("Server running on port %s", port)
-// 	router.Run(":" + port)
-// }
-
-// package main
-
-// import (
-// 	"github.com/gin-gonic/gin"
-// 	"my-go-gin-app/config"
-// 	"my-go-gin-app/routes"
-// )
-
-// func main() {
-// 	config.LoadEnv()
-// 	config.ConnectDB()
-
-// 	router := gin.Default()
-// 	routes.RegisterRoutes(router)
-
-// 	router.Run(":" + config.GetPort())
-// }
-
 package main
 
 import (
@@ -57,4 +18,9 @@ func main() {
 	if err := router.Run(":" + port); err != nil {
 		log.Fatal("❌ Failed to start server:", err)
 	}
+
+	for _, ri := range router.Routes() {
+		fmt.Printf("🔗 Registered route: %s %s\n", ri.Method, ri.Path)
+	}
+
 }

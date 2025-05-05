@@ -1,0 +1,58 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ .title }}</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <h1>{{ .title }}</h1>
+  <p>Total users: {{ .count }}</p>
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Email</th></tr>
+    </thead>
+    <tbody>
+      {{ range .users }}
+      <tr><td>{{ .name }}</td><td>{{ .email }}</td></tr>
+      {{ end }}
+    </tbody>
+  </table>
+  <script src="/static/js/script.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ .title }}</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <h1>{{ .title }}</h1>
+  <p>Total users: {{ .count }}</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Active</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ range .users }}
+      <tr>
+        <td>{{ .name }}</td>
+        <td>{{ .email }}</td>
+        <td>{{ .role }}</td>
+        <td>{{ if .active }}✅ true {{ else }}❌ false {{ end }}</td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+  <!-- <script src="/static/js/script.js"></script> -->
+</body>
+</html>

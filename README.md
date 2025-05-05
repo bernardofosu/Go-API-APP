@@ -219,3 +219,28 @@ go get go.mongodb.org/mongo-driver/mongo
 go get go.mongodb.org/mongo-driver/mongo/options
 go get github.com/joho/godotenv
 ```
+
+```sh
+my-go-gin-app/
+├── config/                      # Configuration (loading .env, app settings)
+│   └── config.go                # (Optional) Handles MongoDB and other setups
+├── controllers/                 # Controller logic (like handling requests)
+│   └── userController.go        # Logic to fetch users and render views
+├── routes/                      # Main folder for all route-related files
+│   ├── router.go                # Main router setup
+│   └── userRoutes/             # Folder for user-specific routes
+│       └── userRoutes.go        # User-specific route definitions
+├── static/                      # Static assets
+│   ├── css/
+│   │   └── style.css            # Frontend styling
+│   ├── js/
+│   │   └── script.js            # JS functionality
+│   └── favicon.ico             # Favicon served to browsers
+├── templates/                   # HTML templates for rendering pages
+│   ├── users.html               # Front page template displaying user data
+│   └── movies.html              # Another sample HTML template if needed
+├── .env                         # Environment variables (like PORT, DB_URI)
+├── go.mod                       # Go module definition
+├── go.sum                       # Go sum for dependencies
+└── main.go                      # Entry point for the application
+```
