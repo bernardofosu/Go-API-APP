@@ -244,3 +244,7 @@ my-go-gin-app/
 ├── go.sum                       # Go sum for dependencies
 └── main.go                      # Entry point for the application
 ```
+
+```sh
+https://favicon.io/favicon-converter/
+```

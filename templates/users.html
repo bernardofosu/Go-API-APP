@@ -1,27 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ .title }}</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-  <h1>{{ .title }}</h1>
-  <p>Total users: {{ .count }}</p>
-  <table>
-    <thead>
-      <tr><th>Name</th><th>Email</th></tr>
-    </thead>
-    <tbody>
-      {{ range .users }}
-      <tr><td>{{ .name }}</td><td>{{ .email }}</td></tr>
-      {{ end }}
-    </tbody>
-  </table>
-  <script src="/static/js/script.js"></script>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,9 +9,12 @@
 <body>
   <h1>{{ .title }}</h1>
   <p>Total users: {{ .count }}</p>
+
+  <!-- Existing Table for All Users -->
   <table>
     <thead>
       <tr>
+        <th>ID</th>
         <th>Name</th>
         <th>Email</th>
         <th>Role</th>
@@ -45,6 +24,7 @@
     <tbody>
       {{ range .users }}
       <tr>
+        <td>{{ ._id }}</td>
         <td>{{ .name }}</td>
         <td>{{ .email }}</td>
         <td>{{ .role }}</td>
@@ -53,6 +33,133 @@
       {{ end }}
     </tbody>
   </table>
-  <!-- <script src="/static/js/script.js"></script> -->
+
+  <hr>
+
+  <!-- 🔍 Fetch by ID Section -->
+  <h2>Find User by ID</h2>
+  <input type="text" id="userIdInput" placeholder="Enter MongoDB ObjectID">
+  <button class="btn-get" onclick="fetchUserById()">Get User</button>
+
+  <!-- 📦 Placeholder for result -->
+  <div id="userResult" style="margin-top: 20px;"></div>
+
+  <!-- 📦 Form for Update -->
+  <div id="updateForm" class="update-form">
+    <h3>Update User</h3>
+    <input type="text" id="updateName" placeholder="Name">
+    <input type="email" id="updateEmail" placeholder="Email">
+    <input type="text" id="updateRole" placeholder="Role">
+    <label>
+      Active:
+      <input type="checkbox" id="updateActive">
+    </label>
+    <button class="btn-put" onclick="updateUser('PUT')">Update User (PUT)</button>
+    <button class="btn-patch" onclick="updateUser('PATCH')">Update User (PATCH)</button>
+    <button class="btn-update" onclick="cancelUpdate()">❌Cancel</button>
+  </div>
+
+  <!-- JS to Handle Fetch, Delete, and Update -->
+  <script>
+    let currentUserId = null;
+
+    function fetchUserById() {
+      const id = document.getElementById("userIdInput").value.trim();
+      const resultDiv = document.getElementById("userResult");
+
+      if (!id) {
+        resultDiv.innerHTML = "<p style='color: red;'>Please enter a user ID</p>";
+        return;
+      }
+
+      fetch(`/api/users/${id}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("User not found");
+          return res.json();
+        })
+        .then((data) => {
+          currentUserId = id;
+          resultDiv.innerHTML = `
+            <h3>User Info</h3>
+            <p><strong>Name:</strong> ${data.name}</p>
+            <p><strong>Email:</strong> ${data.email}</p>
+            <p><strong>Role:</strong> ${data.role}</p>
+            <p><strong>Active:</strong> ${data.active ? "✅ true" : "❌ false"}</p>
+            <button class="btn-delete" onclick="deleteUser('${id}')">Delete User</button>
+            <button class="btn-update" onclick="showUpdateForm('${id}', '${data.name}', '${data.email}', '${data.role}', ${data.active})">Update User</button>
+
+          `;
+        })
+        .catch((err) => {
+          resultDiv.innerHTML = `<p style='color: red;'>${err.message}</p>`;
+        });
+    }
+
+    function deleteUser(id) {
+      if (!confirm("Are you sure you want to delete this user?")) return;
+
+      fetch(`/api/users/${id}`, {
+        method: 'DELETE'
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to delete user");
+          return res.json();
+        })
+        .then(() => {
+          document.getElementById("userResult").innerHTML = "<p style='color: green;'>✅ User deleted successfully</p>";
+          document.getElementById("userIdInput").value = "";
+        })
+        .catch((err) => {
+          document.getElementById("userResult").innerHTML = `<p style='color: red;'>${err.message}</p>`;
+        });
+    }
+
+    function showUpdateForm(id, name, email, role, active) {
+      document.getElementById("updateName").value = name;
+      document.getElementById("updateEmail").value = email;
+      document.getElementById("updateRole").value = role;
+      document.getElementById("updateActive").checked = active;
+      document.getElementById("updateForm").style.display = "block";
+    }
+
+    function cancelUpdate() {
+      document.getElementById("updateForm").style.display = "none";
+    }
+
+    function updateUser(method) {
+      const name = document.getElementById("updateName").value.trim();
+      const email = document.getElementById("updateEmail").value.trim();
+      const role = document.getElementById("updateRole").value.trim();
+      const active = document.getElementById("updateActive").checked;
+
+      if (!name || !email || !role) {
+        alert("Please fill in all fields");
+        return;
+      }
+
+      const updatedUser = { name, email, role, active };
+
+      fetch(`/api/users/${currentUserId}`, {
+        method: method, // Use either 'PUT' or 'PATCH'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedUser)
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to update user");
+          return res.json();
+        })
+        .then(() => {
+          alert("User updated successfully");
+          cancelUpdate();
+          fetchUserById(); // Refresh the displayed user info
+        })
+        .catch((err) => {
+          alert(`Error: ${err.message}`);
+        });
+    }
+  </script>
+
 </body>
 </html>

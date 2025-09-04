@@ -38,6 +38,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -73,34 +74,76 @@ func GetUsers(c *gin.Context) {
 	})
 }
 
-// CreateUser creates a new user
+// // CreateUser creates a new user
+// func CreateUser(c *gin.Context) {
+// 	collection := config.GetCollection("users")
+// 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+// 	defer cancel()
+
+// 	var user bson.M
+// 	if err := c.BindJSON(&user); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
+// 		return
+// 	}
+
+// 	result, err := collection.InsertOne(ctx, user)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+// 		return
+// 	}
+
+// 	c.JSON(http.StatusCreated, gin.H{"message": "User created", "id": result.InsertedID})
+// }
+
+// CreateUser creates a new user in the MongoDB "users" collection
 func CreateUser(c *gin.Context) {
+	// Connect to the "users" collection
 	collection := config.GetCollection("users")
+
+	// Set a 10-second timeout for the DB operation
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	var user bson.M
+
+	// Parse incoming JSON body into bson.M map
 	if err := c.BindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
 		return
 	}
 
+	// Handle "active" field to ensure it's a string ("true"/"false")
+	if val, ok := user["active"].(bool); ok {
+		if val {
+			user["active"] = "true"
+		} else {
+			user["active"] = "false"
+		}
+	}
+
+	// Insert the user into the MongoDB collection
 	result, err := collection.InsertOne(ctx, user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "User created", "id": result.InsertedID})
+	// Return success with the inserted ID
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "User created",
+		"id":      result.InsertedID,
+	})
 }
 
-// UpdateUser updates a user by ID
+// GetUserByID fetches a user by ID
 func GetUserByID(c *gin.Context) {
 	collection := config.GetCollection("users")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	idParam := c.Param("id")
+	fmt.Println("Fetching user with ID:", idParam) // ✅ Add this log
+
 	objID, err := primitive.ObjectIDFromHex(idParam)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID format"})

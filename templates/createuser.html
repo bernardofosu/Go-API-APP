@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 2rem;
+            background-color: #f7f7f7;
+            color: #333;
+            text-align: center;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], input[type="checkbox"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 16px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #createUserResult {
+            margin-top: 20px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h2>Create New User</h2>
+    <form id="createUserForm">
+        <input type="text" id="createName" placeholder="Name" required>
+        <input type="email" id="createEmail" placeholder="Email" required>
+        <input type="password" id="createPassword" placeholder="Password" required>
+        <input type="text" id="createRole" placeholder="Role (e.g., user, admin)" required>
+        <label>
+            Active:
+            <input type="checkbox" id="createActive">
+        </label>
+        <input type="text" id="createPhoto" placeholder="Photo path (optional)">
+        <button type="submit" class="btn-post">Create User</button>
+    </form>
+
+    <div id="createUserResult"></div>
+
+    <h2>User Management</h2>
+
+    <p><a href="http://127.0.0.1:8080">View Existing Users</a></p>
+
+
+    <script>
+        document.getElementById("createUserForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById("createName").value.trim();
+            const email = document.getElementById("createEmail").value.trim();
+            const password = document.getElementById("createPassword").value.trim();
+            const role = document.getElementById("createRole").value.trim();
+            const active = document.getElementById("createActive").checked;
+            const photo = document.getElementById("createPhoto").value.trim();
+
+            const newUser = {
+                name,
+                email,
+                password,
+                role,
+                active,
+                photo
+            };
+
+            fetch("/api/users/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newUser)
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Failed to create user");
+                return res.json();
+            })
+            .then(data => {
+                document.getElementById("createUserResult").innerHTML =
+                    `<p style='color: green;'>✅ ${data.message} (ID: ${data.id})</p>`;
+                document.getElementById("createUserForm").reset();
+            })
+            .catch(err => {
+                document.getElementById("createUserResult").innerHTML =
+                    `<p style='color: red;'>❌ ${err.message}</p>`;
+            });
+        });
+    </script>
+</body>
+</html>

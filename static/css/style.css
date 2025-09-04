@@ -64,4 +64,134 @@
   
   td:last-child {
     font-weight: bold;
-  }  
+  } 
+  
+  
+/* Base button style */
+button {
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 8px 4px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-delete {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-delete:hover {
+  background-color: #c62828;
+}
+
+.update-form {
+  margin-top: 20px;
+  display: none;
+  background-color: #fff3e0; /* light orange */
+  border: 1px solid #ffa726; /* medium orange border */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(255, 167, 38, 0.3);
+}
+
+
+/* Specific styles */
+.btn-get {
+  background-color: #4CAF50;
+}
+
+.btn-get:hover {
+  background-color: #45a049;
+}
+
+.btn-update {
+  background-color: #FFA500;
+}
+
+.btn-update:hover {
+  background-color: #e69500;
+}
+
+.btn-delete {
+  background-color: #e53935;
+}
+
+.btn-delete:hover {
+  background-color: #cc3330;
+}
+
+.btn-put {
+  background-color: #3f51b5;
+}
+
+.btn-put:hover {
+  background-color: #3547a0;
+}
+
+.btn-patch {
+  background-color: #00acc1;
+}
+
+.btn-patch:hover {
+  background-color: #0097a7;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+input[type="text"],
+input[type="email"] {
+  width: 250px;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+
+label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #4CAF50; /* Green tint */
+  cursor: pointer;
+}
